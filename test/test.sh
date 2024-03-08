@@ -45,16 +45,26 @@ else
     echo "${GREEN}[x] Your ft_nm is present in the current working directory.${RESET}"
 fi
 
+echo "${YELLOW}[x] Make sure your glibc-devel.i686 is installed in order to compile 32bits binaries.${RESET}"
+echo "${YELLOW}[x] Of course nm must be installed on your machine in order to test against it.${RESET}"
 echo "${YELLOW}\nSetting up test...${RESET}"
 
 # Compiling sources (x64 & x86)
 echo "${YELLOW}[x] Compiling sources using x64 & x86 architectures.${RESET}"
+make -C test-bin-1 test-bin-1_32
+./ft_nm test-bin-1/test-bin-1 > ft_nm.out
+nm test-bin-1/test-bin-1 > nm.out
+diff ft_nm.out nm.out
+
+
+# make -C test-bin-1 fclean
+
+# Compiling shared object
+echo "${YELLOW}[x] Compiling shared object using x64 & x86 architectures.${RESET}"
 
 # Copying binaries and stripping them
 echo "${YELLOW}[x] Copying the binaries and stripping them.${RESET}"
 
-# Compiling shared object
-echo "${YELLOW}[x] Compiling shared object using x64 & x86 architectures.${RESET}"
 
 echo "${YELLOW}\nStarting test...${RESET}"
 
@@ -67,6 +77,8 @@ echo "${YELLOW}[x] Testing x86 binaries.   (stripped & not stripped)${RESET}"
 echo "${YELLOW}[x] Testing object files.   (stripped & not stripped)${RESET}"
 
 echo "${YELLOW}[x] Testing shared objects. (stripped & not stripped)${RESET}"
+
+echo "${YELLOW}[x] Testing your own ft_nm. (I hope it's not stripped :) )${RESET}"
 
 echo "\n[!] You should test that when the file is not found"
 echo "[!] the binary behave correctly."

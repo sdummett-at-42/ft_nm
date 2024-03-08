@@ -1,0 +1,9 @@
+- 1
+./ft_nm
+a.out: No such file or directory
+--> should print a.out: No such file
+And should return 1
+
+- 2
+check for forbidden functions
+
