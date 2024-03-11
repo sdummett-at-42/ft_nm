@@ -46,18 +46,43 @@ else
 fi
 
 echo "${YELLOW}[x] Make sure your glibc-devel.i686 is installed in order to compile 32bits binaries.${RESET}"
-echo "${YELLOW}[x] Of course nm must be installed on your machine in order to test against it.${RESET}"
+echo "${YELLOW}[x] Of course nm must be installed on your machine in order to test your project against it.${RESET}"
 echo "${YELLOW}\nSetting up test...${RESET}"
 
+compile() {
+    if [ "$#" -ne 2 ]; then
+        echo "Error: Function expects exactly 2 arguments."
+        return 1
+    fi
+    local binary_name=$1
+    local arch=$2 # 32 or 64
+
+    make -C ${binary_name} fclean
+    make -C ${binary_name} ${binary_name}_${arch}
+}
+
+test_x64() {
+    if [ "$#" -ne 2 ]; then
+        echo "Error: Function expects exactly 2 arguments."
+        return 1
+    fi
+    local binary_name=$1
+    local strip=$2
+
+    echo $strip
+
+    compile ${binary_name} "32"
+
+    ./ft_nm ${binary_name}/${binary_name} > ft_nm.out
+    nm ${binary_name}/${binary_name} > nm.out
+    diff ft_nm.out nm.out > diff.out
+    echo "${RED}Has diff ? $?${RESET}"
+}
+
+test_x64 "test-bin-1" true
+
 # Compiling sources (x64 & x86)
-echo "${YELLOW}[x] Compiling sources using x64 & x86 architectures.${RESET}"
-make -C test-bin-1 test-bin-1_32
-./ft_nm test-bin-1/test-bin-1 > ft_nm.out
-nm test-bin-1/test-bin-1 > nm.out
-diff ft_nm.out nm.out
-
-
-# make -C test-bin-1 fclean
+# echo "${YELLOW}[x] Compiling sources using x64 & x86 architectures.${RESET}"
 
 # Compiling shared object
 echo "${YELLOW}[x] Compiling shared object using x64 & x86 architectures.${RESET}"
